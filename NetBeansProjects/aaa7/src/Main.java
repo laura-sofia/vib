@@ -1,140 +1,60 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 
-class Main {
+public class Main {
     
-    public static void main(String[] args) {
+   
+
+    public static void main(String[]args){
+        
         Scanner scn=new Scanner(System.in);
         
         while(true){
-            int a=scn.nextInt();
-            int b=scn.nextInt();
             
-            if (a==0 && b==0)break;
-            
-            int[]head=new int[a];
-            int[]knight=new int[b];
-            long pay=0;
-            
-            for (int i=0;i<a;i++){
-                head[i]=scn.nextInt();
-            }
-            
-            for (int i=0;i<b;i++){
-                knight[i]=scn.nextInt();
-            }
-            if (a>b){
-                doomed();
-                continue;
-            }
-            boolean cont=true;
-            int knightInd=0;
-            head=mergesort(head);
-            knight=mergesort(knight);
-            
-            for (int h=0;h<a;h++){
-                int hDiam=head[h];
-                if (knightInd==b)cont=false;
-                if (!cont)break;
-                
-                while (knight[knightInd]<hDiam){
-                    knightInd++;
-                    if (knightInd==b){
-                        cont=false;
-                        break;
-                    }
+            String s;
+            try{
+                s=scn.nextLine();
+                if(s.isEmpty()){
+                    break;
                 }
-                pay+=knight[knightInd];
-                knightInd++;
+            }catch(Exception e){
+                break;
             }
-            if(!cont){
-                doomed();
-                
-            }
-            else{
-                System.out.println(pay);
-            }
-            
+            ar.add(Integer.parseInt(s));
+        }
+        ArrayList<Integer> res=new ArrayList<>();
+        for (int i=0;i<ar.size();i++){
+            ArrayList<Integer> n=lis(i);
+            if (n.size()>res.size())res=n;
+        }
+        System.out.println(res.size());
+        System.out.println("-");
+        for (int i:res){
+            System.out.println(i);
         }
         
-        
     }
-    static void doomed(){
-        String lose="Loowater is doomed!";
-        System.out.println(lose);
-    }
-    static int[] mergesort(int[] arr ){
-        
-        int n=arr.length;
-        if (n==1)return arr;
-        
-        if (n==2){
-            
-            int a=arr[0];
-            int b=arr[1];
-            if (a>b){
-                
-                arr[0]=b;
-                arr[1]=a;
-                
-            }
+    static ArrayList<Integer> ar=new ArrayList<>();
+    static ArrayList<Integer> lis( int i){
+        ArrayList<Integer> arr=new ArrayList<>();
+        if(i==0){
+            arr.add(ar.get(0));
             return arr;
-            
         }
-        int len=n/2;
-        int[] a=new int[len];
-        int[] b=new int[n-len];
-        
-        for (int i=0;i<len;i++){
-            a[i]=arr[i];
-        }
-        for (int i=0;i<n-len;i++){
-            b[i]=arr[i+len];
-        }
-        
-        a=mergesort(a);
-        b=mergesort(b);
-        int[]res=new int[n];
-        
-        int ia=0;
-        int ib=0;
-        
-        for (int i=0;i<n;i++){
-            int na=a[ia];
-            int nb=b[ib];
-            
-            if (na>nb){
-                
-                res[i]=b[ib];
-                
-                ib++;
-                
-            }
-            else{
-                
-                res[i]=a[ia];
-                
-                ia++;
-            }
-            
-            if (ia==len){
-                for (int y=ib;y<n-len;y++){
-                    i++;
-                    res[i]=b[y];
-                    
-               }
-                break;
-            }
-            else if (ib==n-len){
-                for (int y=ia;y<len;y++){
-                    i++;
-                    res[i]=a[y];
-                    
+        int res=0;
+        ArrayList<Integer> qwe=new ArrayList<>();
+        for (int j=0;j<i;j++){
+            if (ar.get(j)<ar.get(i)){
+                ArrayList<Integer> r=lis(j);
+                if (r.size()+1>res){
+                    qwe=r;
+                    res=r.size();
                 }
-                break;
             }
         }
-        return res;
+        qwe.add(ar.get(i));
+        return qwe;
     }
+            
 }
-
