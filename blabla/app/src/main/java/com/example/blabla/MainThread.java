@@ -2,27 +2,31 @@ package com.example.blabla;
 
 import android.graphics.Canvas;
 import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
 
-public class MainThread extends Thread  {
+public class MainThread extends Thread {
 
- //   private SurfaceHolder surfaceHolder;
+    private SurfaceHolder surfaceHolder;
     private GameView gameView;
     private boolean running;
     public static Canvas canvas;
-    private View view;
+    private SurfaceView view;
+    private Touchh touchh;
 
     private TouchEvent touchEvent;
 
-    public MainThread(View view, GameView gameView){
+    public MainThread(SurfaceHolder surfaceHolder, GameView gameView){
         super();
         this.gameView=gameView;
-        this.view=view;
-      //  this.surfaceHolder=surfaceHolder;
+        this.surfaceHolder=surfaceHolder;
+
+
 
     }
-  /*  public void setRunning(boolean isRunning) {
+    public void setRunning(boolean isRunning) {
         running = isRunning;
+
     }
     @Override
     public void run() {
@@ -30,9 +34,9 @@ public class MainThread extends Thread  {
             canvas = null;
 
             try {
-                canvas = ();
+                canvas = this.surfaceHolder.lockCanvas();
                 synchronized(surfaceHolder) {
-                  //  this.gameView.update();
+                    this.gameView.update();
                     this.gameView.draw(canvas);
                 }
             } catch (Exception e) {} finally {
@@ -45,8 +49,26 @@ public class MainThread extends Thread  {
                 }
             }
         }
-        while(gameView.onClick()){
+    }
 
+
+    public void onClick() {
+        canvas = null;
+
+        try {
+            canvas = this.surfaceHolder.lockCanvas();
+            synchronized(surfaceHolder) {
+                this.gameView.update();
+                this.gameView.draw(canvas);
+            }
+        } catch (Exception e) {} finally {
+            if (canvas != null) {
+                try {
+                    surfaceHolder.unlockCanvasAndPost(canvas);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
-    }*/
+    }
 }

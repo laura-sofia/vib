@@ -1,5 +1,6 @@
 package com.example.blabla;
 
+import android.bluetooth.BluetoothA2dp;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -14,24 +15,26 @@ public class CharacterSprite {
     private int left=100;
     private int top=100;
     private int[] touched=new int[2];
+
+    private int[] colors= new int[]{GRAY,GREEN, BLUE,RED};
+
+    private int a=0;
+
     public void draw(Canvas canvas){
-        canvas.drawColor(WHITE);
+
+        int now=colors[a];
+
+        canvas.drawColor(now);
         Paint paint = new Paint();
         paint.setColor(RED);
 
-
-
-        int right=screenWidth-left-100;
-        int bottom=screenHeight-top-100;
         canvas.drawRect(left, top, 200, 200, paint);
 
     }
-    public void update(float x, float y){
+    public void update(){
 
 
-        left=(int)x;
-        top=(int)y;
-
+        a++;
 
     }
 }
