@@ -2,8 +2,6 @@ package com.example.lovlyactivity;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -13,7 +11,6 @@ public class DoodleView extends View {
 
 
     private drawingClass drawing;
-    private Path path=new Path();
 
     public DoodleView(Context context) {
         super(context);
@@ -29,7 +26,6 @@ public class DoodleView extends View {
     }
     private void init(AttributeSet attrs, int defStyle){
 
-
         drawing=new drawingClass();
     }
     @Override
@@ -37,8 +33,6 @@ public class DoodleView extends View {
         super.onDraw(canvas);
 
         drawing.drawSquare(canvas,getWidth(),getHeight());
-
-        //canvas.drawPath(path,paintDoodle);
     }
     @Override
     public boolean onTouchEvent(MotionEvent event){
@@ -49,15 +43,10 @@ public class DoodleView extends View {
         switch (event.getAction()){
             case MotionEvent.ACTION_DOWN:
 
-
-                path.moveTo(touchX, touchY);
-                drawing.update(touchX,touchY);
+                drawing.update(touchX,touchY,getHeight(),getWidth());
 
                 break;
-            case MotionEvent.ACTION_MOVE:
 
-                path.lineTo(touchX,touchY);
-                break;
             case MotionEvent.ACTION_UP:
                 break;
         }

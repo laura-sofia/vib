@@ -3,7 +3,8 @@ package com.example.lovlyactivity;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.text.TextPaint;
+
+import org.w3c.dom.Text;
 
 public class drawingClass {
 
@@ -12,111 +13,34 @@ public class drawingClass {
     private Paint whiteCircle=new Paint();
     private Paint blackCircle= new Paint();
     private Paint blueCircle=new Paint();
+    private Paint TextColor=new Paint();
+    private String black,white;
 
-    private boolean yes;
     private int[][] arr;
+    private boolean turn;
 
-    int lastI=0;
-    int lastJ=1;
-
-    private int wwidth;
-    private int hheight;
-
-    private boolean move=false;
+    private DecisionClass decisionClass;
 
     public drawingClass(){
 
-        yes=false;
-
-        arr=new int[8][8];//{{0,1,1,1,1,1,1,1},{1,1,1,1,1,1,1,1},{1,1,1,1,1,1,1,1},{1,1,1,1,1,1,1,1},{1,1,1,1,1,1,1,1},{1,1,1,1,1,1,1,1},{1,1,1,1,1,1,1,1},{1,1,1,1,1,1,1,1}};
+        arr=new int[8][8];
         init();
     }
-    public void update(float x, float y){
-        //yes=!yes;
-        float posX=x-20;
-        float posY=y-(hheight-wwidth+20)/2;
-
-        float square=wwidth-40;
-        float smallSquare=square/8;
-
-        if (posX>0 && posX<square){
-            if (posY>0 && posY<square){
-
-
-                int i= (int) ((int)posY/smallSquare);
-                int j= (int) ((int)posX/smallSquare);
-
-                if (arr[i][j]!=0){
-
-                    if (move)move(i,j);
-                    else notMove(i,j);
-
-                }
-            }
-        }
-
+    public void update(float x, float y, int width, int height){
+        decisionClass.update(x, y, width, height);
     }
-    public void move(int i,int j){
-
-        int a=arr[i][j];
-
-        if (Math.abs(a)==3){
-            arr[i][j]=a/3;
-            for (int g=0;g<8;g++){
-                for (int h=0;h<8;h++){
-                    if (Math.abs(arr[g][h])==3)arr[g][h]=0;
-                }
-            }
-
-            arr[lastI][lastJ]=0;
-            move=false;
-        }
-        else notMove(i,j);
-
-
-    }
-    public void  notMove(int i,int j){
-
-        int a=arr[i][j];
-        if (arr[i][j]==3 || arr[i][j]==-3)move(i, j);
-
-        if (lastI<4)arr[lastI][lastJ]=1;
-        else arr[lastI][lastJ]=-1;
-
-
-        lastI=i;
-        lastJ=j;
-
-        for (int g=0;g<8;g++){
-            for (int h=0;h<8;h++){
-                if (Math.abs(arr[g][h])==3 || Math.abs(arr[g][h])==-3)arr[g][h]=0;
-            }
-        }
-
-
-
-        if (j-1!=-1){
-            if (arr[i+a][j-1]==0)arr[i+a][j-1]=3*a;
-        }
-        if (j+1!=8){
-            if (arr[i+a][j+1]==0)arr[i+a][j+1]=3*a;
-        }
-        arr[i][j]=2;
-
-        move=true;
-    }
-
 
     public void drawSquare(Canvas canvas, int width,int height){
-        wwidth=width;
-        hheight=height;
 
+        arr=decisionClass.getArr();
+        turn =decisionClass.getTurn();
+        String now;
+        if (!turn)now=white;
+        else now=black;
         canvas.drawColor(Color.GRAY);
+        canvas.drawText("It's "+now+ " turn.",40,120, TextColor);
 
         int top=(height-width+20)/2;
-
-     //   canvas.drawRect(20,(height-width+20)/2,width-20,(height+width+20)/2,square);
-
         int smallSquare=width/8-5;
         int x=20+smallSquare/2;
         int y=top+smallSquare/2;
@@ -134,7 +58,7 @@ public class drawingClass {
                 if (Math.abs(a)==3){
                     canvas.drawCircle(x,y,smallSquare/2-5,blueCircle);
                 }
-                if (a>0){
+                else if (a>0){
                     canvas.drawCircle(x,y,smallSquare/2-5,blackCircle);
                     if (a==2)canvas.drawCircle(x,y,smallSquare/2-10,blueCircle);
                 }
@@ -152,24 +76,13 @@ public class drawingClass {
             xS=20;
         }
 
-        //canvas.drawText(Integer.toString(width)+" "+Integer.toString(height),300,300,textColor);
 
-        if (yes){
-            canvas .drawCircle(width/2,height/2,400,whiteCircle);
-        }
     }
 
 
     public void init(){
-        for (int i=0;i<3;i++){
-            for (int j=(i+1)%2;j<8;j+=2){
-                arr[i][j]=1;
-            }
-        }
 
-        for (int j=0;j<8;j+=2)arr[5][j]=-1;
-        for (int j=1;j<8;j+=2)arr[6][j]=-1;
-        for (int j=0;j<8;j+=2)arr[7][j]=-1;
+        decisionClass=new DecisionClass();
 
         blackSquare.setColor(Color.BLACK);
         blackSquare.setStyle(Paint.Style.FILL);
@@ -185,5 +98,14 @@ public class drawingClass {
 
         blueCircle.setColor(Color.BLUE);
         blueCircle.setStyle(Paint.Style.FILL_AND_STROKE);
+
+        TextColor.setStyle(Paint.Style.FILL);
+        TextColor.setTextSize(100);
+        TextColor.setColor(Color.YELLOW);
+
+        black="black";
+        white="white";
+
+
     }
 }
