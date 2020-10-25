@@ -4,9 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-import org.w3c.dom.Text;
-
-public class drawingClass {
+public class DrawingClass {
 
     private Paint square=new Paint();
     private Paint blackSquare=new Paint();
@@ -21,7 +19,7 @@ public class drawingClass {
 
     private DecisionClass decisionClass;
 
-    public drawingClass(){
+    public DrawingClass(){
 
         arr=new int[8][8];
         init();

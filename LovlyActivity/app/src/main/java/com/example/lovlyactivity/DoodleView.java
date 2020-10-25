@@ -2,7 +2,6 @@ package com.example.lovlyactivity;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Path;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -10,7 +9,7 @@ import android.view.View;
 public class DoodleView extends View {
 
 
-    private drawingClass drawing;
+    private DrawingClass drawing;
 
     public DoodleView(Context context) {
         super(context);
@@ -26,7 +25,7 @@ public class DoodleView extends View {
     }
     private void init(AttributeSet attrs, int defStyle){
 
-        drawing=new drawingClass();
+        drawing=new DrawingClass();
     }
     @Override
     public void onDraw(Canvas canvas){
