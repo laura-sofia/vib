@@ -9,41 +9,51 @@ import android.view.View;
 public class DoodleView extends View {
 
 
-    private DrawingClass drawing;
+    // private DrawingClass drawing;
+    // private DecisionClass decisionClass;
+    private BoardState boardState;
 
     public DoodleView(Context context) {
         super(context);
-        init(null,0);
+        init(null, 0);
     }
-    public DoodleView(Context context, AttributeSet attributeSet){
-        super(context,attributeSet);
-        init(attributeSet,0);
-    }
-    public DoodleView(Context context,AttributeSet attributeSet,int defStyle){
-        super(context,attributeSet,defStyle);
-        init(attributeSet,defStyle);
-    }
-    private void init(AttributeSet attrs, int defStyle){
 
-        drawing=new DrawingClass();
+    public DoodleView(Context context, AttributeSet attributeSet) {
+        super(context, attributeSet);
+        init(attributeSet, 0);
     }
+
+    public DoodleView(Context context, AttributeSet attributeSet, int defStyle) {
+        super(context, attributeSet, defStyle);
+        init(attributeSet, defStyle);
+    }
+
+    private void init(AttributeSet attrs, int defStyle) {
+
+        // drawing=new DrawingClass();
+        // decisionClass = new DecisionClass();
+        boardState = new BoardState();
+    }
+
     @Override
-    public void onDraw(Canvas canvas){
+    public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        drawing.drawSquare(canvas,getWidth(),getHeight());
+        //drawing.drawSquare(canvas,getWidth(),getHeight());
+        boardState.drawSquare(canvas, getWidth(), getHeight());
     }
+
     @Override
-    public boolean onTouchEvent(MotionEvent event){
+    public boolean onTouchEvent(MotionEvent event) {
 
-        float touchX=event.getX();
-        float touchY=event.getY();
+        float touchX = event.getX();
+        float touchY = event.getY();
 
-        switch (event.getAction()){
+        switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
 
-                drawing.update(touchX,touchY,getHeight(),getWidth());
-
+                //decisionClass.update(touchX,touchY,getHeight(),getWidth());
+                boardState.update(touchX, touchY, getHeight(), getWidth());
                 break;
 
             case MotionEvent.ACTION_UP:
