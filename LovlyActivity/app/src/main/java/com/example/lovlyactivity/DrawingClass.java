@@ -71,10 +71,9 @@ public class DrawingClass {
             yS+=smallSquare;
             x=20+smallSquare/2;
             xS=20;
-        }
+       }
 
-
-    }
+     }
 
 
     public void init() {
