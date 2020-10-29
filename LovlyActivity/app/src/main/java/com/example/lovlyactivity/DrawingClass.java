@@ -7,41 +7,40 @@ import android.graphics.Paint;
 public class DrawingClass {
 
     private Paint square=new Paint();
-    private Paint blackSquare=new Paint();
-    private Paint whiteCircle=new Paint();
-    private Paint blackCircle= new Paint();
-    private Paint blueCircle=new Paint();
-    private Paint TextColor=new Paint();
-    private String black,white;
+    private Paint blackSquare = new Paint();
+    private Paint whiteCircle = new Paint();
+    private Paint blackCircle = new Paint();
+    private Paint blueCircle = new Paint();
+    private Paint TextColor = new Paint();
+    private String black, white;
 
-    private int[][] arr;
+    private int[][] board;
     private boolean turn;
 
-    private DecisionClass decisionClass;
+    //  private DecisionClass decisionClass;
+    //   private BoardState boardState;
 
-    public DrawingClass(){
+    public DrawingClass() {
 
-        arr=new int[8][8];
+        board = new int[8][8];
         init();
     }
-    public void update(float x, float y, int width, int height){
-        decisionClass.update(x, y, width, height);
-    }
 
-    public void drawSquare(Canvas canvas, int width,int height){
-
-        arr=decisionClass.getArr();
-        turn =decisionClass.getTurn();
+    public void drawSquare(Canvas canvas, int width, int height, int[][] board, boolean turn) {
+        // this.board=board;
+        //  this.turn=turn;
+        //   board=boardState.getBoard();
+        //  turn =boardState.getTurn();
         String now;
-        if (!turn)now=white;
-        else now=black;
+        if (!turn) now = white;
+        else now = black;
         canvas.drawColor(Color.GRAY);
-        canvas.drawText("It's "+now+ " turn.",40,120, TextColor);
+        canvas.drawText("It's " + now + "'s turn.", 40, 120, TextColor);
 
-        int top=(height-width+20)/2;
-        int smallSquare=width/8-5;
-        int x=20+smallSquare/2;
-        int y=top+smallSquare/2;
+        int top = (height - width + 20) / 2;
+        int smallSquare = width / 8 - 5;
+        int x = 20 + smallSquare / 2;
+        int y = top + smallSquare / 2;
 
         int xS=20;
         int yS=top;
@@ -49,7 +48,7 @@ public class DrawingClass {
 
         for (int i=0;i<8;i++){
             for (int j=0;j<8;j++){
-                int a=arr[i][j];
+                int a = board[i][j];
                 if ((i+j)%2>0){
                 canvas.drawRect(xS,yS,xS+smallSquare,yS+smallSquare,blackSquare);
                  }
@@ -78,9 +77,10 @@ public class DrawingClass {
     }
 
 
-    public void init(){
+    public void init() {
 
-        decisionClass=new DecisionClass();
+        // decisionClass=new DecisionClass();
+        //   boardState=new BoardState();
 
         blackSquare.setColor(Color.BLACK);
         blackSquare.setStyle(Paint.Style.FILL);
