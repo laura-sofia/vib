@@ -1,6 +1,8 @@
 package com.example.lovlyactivity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DecisionClass {
 
@@ -9,6 +11,8 @@ public class DecisionClass {
     private ArrayList<int[]> lastPlacesToGo;
     private boolean turn = false;
     private int[][] board;
+    private Map<Integer, int[]> eat;
+    ///         place ,,,, oponent
 
     public DecisionClass() {
         init();
@@ -51,6 +55,7 @@ public class DecisionClass {
         else if (clicked == Checker.CLICKED.pos()) {
             board[i][j] /= Checker.CLICKED.pos();
             clearLastPlacesToGo();
+            clearNotEatenCheckers();
             lastI = 0;
             lastJ = 1;
         } else {
@@ -62,6 +67,11 @@ public class DecisionClass {
     public void move(int i, int j) {
 
         int checker = board[i][j];
+        if (eat.containsKey(i * 10 + j)) {
+            board[eat.get(i * 10 + j)[0]][eat.get(i * 10 + j)[1]] = 0;
+            eat.remove(i * 10 + j);
+            clearNotEatenCheckers();
+        }
         clearLastPlacesToGo();
         board[i][j] = checker / Checker.PLACE_TO_GO.pos();
 
@@ -82,6 +92,7 @@ public class DecisionClass {
         lastJ = j;
 
         clearLastPlacesToGo();
+        clearNotEatenCheckers();
 
         board[i][j] *= Checker.CLICKED.pos();
         if (i == 7 && clicked == Checker.BLACK.pos()) return 1;
@@ -91,25 +102,37 @@ public class DecisionClass {
         return 1;
     }
 
-    public void position(int i, int j, int clicked) {
-        // int b=a*-1;
+    public void position(int i, int j, int direction) {
+        int oponent = direction * -1;
+        // go right
         if (j - 1 != -1) {
-
-            if (board[i + clicked][j - 1] == Checker.NOCHECKER.pos()) {
-                board[i + clicked][j - 1] = Checker.PLACE_TO_GO.pos() * clicked;
-                lastPlacesToGo.add(new int[]{i + clicked, j - 1});
+            if (board[i + direction][j - 1] == Checker.NOCHECKER.pos()) {
+                board[i + direction][j - 1] = Checker.PLACE_TO_GO.pos() * direction;
+                lastPlacesToGo.add(new int[]{i + direction, j - 1});
             }
-           /* else if(j-2>-1 && i+2*a<8){
-                if (board[i+a][j-1]==b && board[i+2*a][j-2]==0){
+        }
+        //go left
+        if (j + 1 != 8) {
+            if (board[i + direction][j + 1] == 0) {
+                board[i + direction][j + 1] = Checker.PLACE_TO_GO.pos() * direction;
+                lastPlacesToGo.add(new int[]{i + direction, j + 1});
+            }
+        }
+        int[] ii = new int[]{2, 2, -2, -2};
+        int[] yy = new int[]{-2, 2, -2, 2};
+        int[] ieat = new int[]{1, 1, -1, -1};
+        int[] yeat = new int[]{-1, 1, -1, 1};
+        for (int index = 0; index < 4; index++) {
+            int futI = i + ii[index];
+            int futJ = j + yy[index];
+            if (futI > -1 && futI < 8 && futJ < 8 && futJ > -1) {
+                if (board[i + ieat[index]][j + yeat[index]] == oponent && board[futI][futJ] == Checker.NOCHECKER.pos()) {
+                    board[futI][futJ] = Checker.PLACE_TO_GO.pos() * direction;
+                    board[i + ieat[index]][j + yeat[index]] = oponent * Checker.WILL_BE_EATEN.pos();
+                    eat.put((futI) * 10 + futJ, new int[]{i + ieat[index], j + yeat[index]});
+                    lastPlacesToGo.add(new int[]{futI, futJ});
 
                 }
-            }*/
-        }
-
-        if (j + 1 != 8) {
-            if (board[i + clicked][j + 1] == 0) {
-                board[i + clicked][j + 1] = Checker.PLACE_TO_GO.pos() * clicked;
-                lastPlacesToGo.add(new int[]{i + clicked, j + 1});
             }
         }
     }
@@ -120,6 +143,15 @@ public class DecisionClass {
             board[pos[0]][pos[1]] = 0;
         }
         lastPlacesToGo.clear();
+    }
+
+    public void clearNotEatenCheckers() {
+        for (Map.Entry<Integer, int[]> entry : eat.entrySet()) {
+
+            board[entry.getValue()[0]][entry.getValue()[1]] /= Checker.WILL_BE_EATEN.pos();
+
+        }
+        eat.clear();
     }
 
     public void init() {
@@ -134,6 +166,7 @@ public class DecisionClass {
         for (int j = 1; j < 8; j += 2) board[6][j] = Checker.WHITE.pos();
         for (int j = 0; j < 8; j += 2) board[7][j] = Checker.WHITE.pos();
         lastPlacesToGo = new ArrayList<>();
+        eat = new HashMap<>();
     }
 
     enum Checker {
@@ -143,7 +176,8 @@ public class DecisionClass {
         BLACK_CLICKED(2),
         CLICKED(2),
         WHITE_CLICKED(-2),
-        PLACE_TO_GO(3);
+        PLACE_TO_GO(3),
+        WILL_BE_EATEN(4);
 
         public final int label;
 

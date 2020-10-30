@@ -12,6 +12,7 @@ public class DrawingClass {
     private Paint blackCircle = new Paint();
     private Paint blueCircle = new Paint();
     private Paint TextColor = new Paint();
+    private Paint eatenColor = new Paint();
     private String black, white;
 
     private int[][] board;
@@ -57,11 +58,13 @@ public class DrawingClass {
                 }
                 else if (a>0){
                     canvas.drawCircle(x,y,smallSquare/2-5,blackCircle);
-                    if (a==2)canvas.drawCircle(x,y,smallSquare/2-10,blueCircle);
+                    if (a == 2) canvas.drawCircle(x, y, smallSquare / 2 - 10, blueCircle);
+                    if (a == 4) canvas.drawCircle(x, y, smallSquare / 2 - 10, eatenColor);
                 }
                 else if(a<0){
                     canvas.drawCircle(x,y,smallSquare/2-5,whiteCircle);
-                    if (a==-2)canvas.drawCircle(x,y,smallSquare/2-10,blueCircle);
+                    if (a == -2) canvas.drawCircle(x, y, smallSquare / 2 - 10, blueCircle);
+                    if (a == -4) canvas.drawCircle(x, y, smallSquare / 2 - 10, eatenColor);
                 }
 
                 x+=smallSquare;
@@ -100,8 +103,11 @@ public class DrawingClass {
         TextColor.setTextSize(100);
         TextColor.setColor(Color.YELLOW);
 
-        black="black";
-        white="white";
+        eatenColor.setStyle(Paint.Style.FILL);
+        eatenColor.setColor(Color.RED);
+
+        black = "black";
+        white = "white";
 
 
     }
