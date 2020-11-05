@@ -39,8 +39,15 @@ public class DoodleView extends View {
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+      /*  if (boardState.checkWin()){
+            boardState.drawWin(canvas, getWidth(),getHeight());
+        }*/
+        //else{
         //drawing.drawSquare(canvas,getWidth(),getHeight());
         boardState.drawSquare(canvas, getWidth(), getHeight());
+        //}
+
+
     }
 
     @Override

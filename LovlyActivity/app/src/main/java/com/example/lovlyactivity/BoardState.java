@@ -12,7 +12,7 @@ public class BoardState {
         drawingClass = new DrawingClass();
     }
 
-    public int[][] getBoard() {
+    public Checker[][] getBoard() {
         return decisionClass.getBoard();
     }
 

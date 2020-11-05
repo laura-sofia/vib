@@ -15,7 +15,7 @@ public class DrawingClass {
     private Paint eatenColor = new Paint();
     private String black, white;
 
-    private int[][] board;
+   // private int[][] board;
     private boolean turn;
 
     //  private DecisionClass decisionClass;
@@ -23,11 +23,15 @@ public class DrawingClass {
 
     public DrawingClass() {
 
-        board = new int[8][8];
+        // board = new int[8][8];
         init();
     }
 
-    public void drawSquare(Canvas canvas, int width, int height, int[][] board, boolean turn) {
+    public void drawWin(Canvas canvas, int width, int height) {
+
+    }
+
+    public void drawSquare(Canvas canvas, int width, int height, Checker[][] board, boolean turn) {
         // this.board=board;
         //  this.turn=turn;
         //   board=boardState.getBoard();
@@ -48,27 +52,29 @@ public class DrawingClass {
         canvas.drawRect(20,top,20+8*smallSquare,top+8*smallSquare,square);
 
         for (int i=0;i<8;i++){
-            for (int j=0;j<8;j++){
-                int a = board[i][j];
-                if ((i+j)%2>0){
-                canvas.drawRect(xS,yS,xS+smallSquare,yS+smallSquare,blackSquare);
-                 }
-                if (Math.abs(a)==3){
-                    canvas.drawCircle(x,y,smallSquare/2-5,blueCircle);
+            for (int j=0;j<8;j++) {
+                Checker checker = board[i][j];
+                if ((i + j) % 2 > 0) {
+                    canvas.drawRect(xS, yS, xS + smallSquare, yS + smallSquare, blackSquare);
                 }
-                else if (a>0){
-                    canvas.drawCircle(x,y,smallSquare/2-5,blackCircle);
-                    if (a == 2) canvas.drawCircle(x, y, smallSquare / 2 - 10, blueCircle);
-                    if (a == 4) canvas.drawCircle(x, y, smallSquare / 2 - 10, eatenColor);
-                }
-                else if(a<0){
-                    canvas.drawCircle(x,y,smallSquare/2-5,whiteCircle);
-                    if (a == -2) canvas.drawCircle(x, y, smallSquare / 2 - 10, blueCircle);
-                    if (a == -4) canvas.drawCircle(x, y, smallSquare / 2 - 10, eatenColor);
+                if (checker == Checker.BLACK_PLACE_TO_GO || checker == Checker.WHITE_PLACE_TO_GO) {
+                    canvas.drawCircle(x, y, smallSquare / 2 - 5, blueCircle);
+                } else if (checker.label > 0) {
+                    canvas.drawCircle(x, y, smallSquare / 2 - 5, blackCircle);
+                    if (checker == Checker.BLACK_CLICKED)
+                        canvas.drawCircle(x, y, smallSquare / 2 - 10, blueCircle);
+                    if (checker == Checker.BLACK_WILL_BE_EATEN)
+                        canvas.drawCircle(x, y, smallSquare / 2 - 10, eatenColor);
+                } else if (checker.label < 0) {
+                    canvas.drawCircle(x, y, smallSquare / 2 - 5, whiteCircle);
+                    if (checker == Checker.WHITE_CLICKED)
+                        canvas.drawCircle(x, y, smallSquare / 2 - 10, blueCircle);
+                    if (checker == Checker.WHITE_WILL_BE_EATEN)
+                        canvas.drawCircle(x, y, smallSquare / 2 - 10, eatenColor);
                 }
 
-                x+=smallSquare;
-                xS+=smallSquare;
+                x += smallSquare;
+                xS += smallSquare;
             }
             y+=smallSquare;
             yS+=smallSquare;
