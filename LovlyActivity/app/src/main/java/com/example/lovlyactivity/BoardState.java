@@ -6,25 +6,41 @@ public class BoardState {
 
     private DecisionClass decisionClass;
     private DrawingClass drawingClass;
+    private boolean win = false;
 
     public BoardState() {
-        decisionClass = new DecisionClass();
-        drawingClass = new DrawingClass();
+        init();
     }
 
     public Checker[][] getBoard() {
         return decisionClass.getBoard();
     }
 
-    public boolean getTurn() {
+    public Turn getTurn() {
         return decisionClass.getTurn();
     }
 
     public void drawSquare(Canvas canvas, int width, int height) {
-        drawingClass.drawSquare(canvas, width, height, getBoard(), getTurn());
+        if (decisionClass.won != Checker.NOCHECKER) {
+            drawingClass.drawWin(canvas, width, height, decisionClass.won);
+            win = true;
+        } else {
+            drawingClass.drawSquare(canvas, width, height, getBoard(), getTurn());
+        }
+
     }
 
     public void update(float x, float y, int height, int width) {
+        if (win) {
+            init();
+            win = false;
+        }
         decisionClass.update(x, y, height, width);
+
+    }
+
+    private void init() {
+        decisionClass = new DecisionClass();
+        drawingClass = new DrawingClass();
     }
 }

@@ -52,4 +52,9 @@ public enum Checker {
         return WHITE;
     }
 
+    public static Checker color(Checker checker) {
+        if (checker.label > 0) return BLACK;
+        return WHITE;
+    }
+
 }

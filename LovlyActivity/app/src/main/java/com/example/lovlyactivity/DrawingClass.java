@@ -27,17 +27,22 @@ public class DrawingClass {
         init();
     }
 
-    public void drawWin(Canvas canvas, int width, int height) {
+    public void drawWin(Canvas canvas, int width, int height, Checker whoWon) {
+        String s;
+        if (whoWon == Checker.BLACK) s = black;
+        else s = white;
+        canvas.drawText(s + " won.", 100, width / 2, TextColor);
+
 
     }
 
-    public void drawSquare(Canvas canvas, int width, int height, Checker[][] board, boolean turn) {
+    public void drawSquare(Canvas canvas, int width, int height, Checker[][] board, Turn turn) {
         // this.board=board;
         //  this.turn=turn;
         //   board=boardState.getBoard();
         //  turn =boardState.getTurn();
         String now;
-        if (!turn) now = white;
+        if (turn == Turn.WHITE) now = white;
         else now = black;
         canvas.drawColor(Color.GRAY);
         canvas.drawText("It's " + now + "'s turn.", 40, 120, TextColor);

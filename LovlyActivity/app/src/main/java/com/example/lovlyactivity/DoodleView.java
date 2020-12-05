@@ -30,8 +30,6 @@ public class DoodleView extends View {
 
     private void init(AttributeSet attrs, int defStyle) {
 
-        // drawing=new DrawingClass();
-        // decisionClass = new DecisionClass();
         boardState = new BoardState();
     }
 
@@ -39,13 +37,7 @@ public class DoodleView extends View {
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-      /*  if (boardState.checkWin()){
-            boardState.drawWin(canvas, getWidth(),getHeight());
-        }*/
-        //else{
-        //drawing.drawSquare(canvas,getWidth(),getHeight());
         boardState.drawSquare(canvas, getWidth(), getHeight());
-        //}
 
 
     }
@@ -59,7 +51,6 @@ public class DoodleView extends View {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
 
-                //decisionClass.update(touchX,touchY,getHeight(),getWidth());
                 boardState.update(touchX, touchY, getHeight(), getWidth());
                 break;
 
