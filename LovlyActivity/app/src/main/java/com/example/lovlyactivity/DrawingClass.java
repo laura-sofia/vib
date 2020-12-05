@@ -13,6 +13,7 @@ public class DrawingClass {
     private Paint blueCircle = new Paint();
     private Paint TextColor = new Paint();
     private Paint eatenColor = new Paint();
+    private Paint hasToEat = new Paint();
     private String black, white;
 
    // private int[][] board;
@@ -116,6 +117,9 @@ public class DrawingClass {
 
         eatenColor.setStyle(Paint.Style.FILL);
         eatenColor.setColor(Color.RED);
+
+        hasToEat.setStyle(Paint.Style.FILL);
+        hasToEat.setColor(Color.CYAN);
 
         black = "black";
         white = "white";

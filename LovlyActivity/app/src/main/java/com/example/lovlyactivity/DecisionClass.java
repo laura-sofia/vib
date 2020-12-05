@@ -11,9 +11,9 @@ public class DecisionClass {
     int lastI = 0;
     int lastJ = 1;
     public Checker won = Checker.NOCHECKER;
-    private int nBlack = 13;
+    private int nBlack = 12;
     private ArrayList<int[]> lastPlacesToGo;
-    private int nWhite = 13;
+    private int nWhite = 12;
     private Map<Integer, int[]> eat;
     private Checker[][] board;
     ///         place ,,,, oponent
@@ -71,6 +71,8 @@ public class DecisionClass {
         return 1;
     }
 
+    private boolean hasToEat = false;
+
     public void move(int i, int j) {
 
         Checker checker = board[i][j];
@@ -84,13 +86,17 @@ public class DecisionClass {
         clearLastPlacesToGo();
         board[i][j] = Checker.moveCheckerToPlace(checker);
 
+        invertPlayer();
 
-        board[lastI][lastJ] = Checker.NOCHECKER;
-        turn = Turn.invert(turn);
 
         checkWin();
         //// Winning class
         ////
+    }
+
+    public void invertPlayer() {
+        board[lastI][lastJ] = Checker.NOCHECKER;
+        turn = Turn.invert(turn);
 
 
     }
@@ -123,10 +129,9 @@ public class DecisionClass {
     public void position(int i, int j, Checker checker) {
 
         int direction = checker.label;
-        int oponent = direction * -1;
-        // go right
-        if ((i != 7 && checker == Checker.BLACK) || (i != 0 && checker == Checker.WHITE)) {
 
+        if ((i != 7 && checker == Checker.BLACK) || (i != 0 && checker == Checker.WHITE)) {
+            // go right
             if (j - 1 != -1) {
 
                 if (board[i + direction][j - 1] == Checker.NOCHECKER) {
