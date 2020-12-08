@@ -1,12 +1,12 @@
 package com.example.lovlyactivity;
 
 public enum Turn {
-    WHITE(false),
-    BLACK(true);
+    WHITE(Checker.WHITE),
+    BLACK(Checker.BLACK);
 
-    public final boolean label;
+    public final Checker label;
 
-    Turn(boolean label) {
+    Turn(Checker label) {
         this.label = label;
     }
 
@@ -15,7 +15,7 @@ public enum Turn {
         return WHITE;
     }
 
-    public boolean turn() {
+    public Checker turn() {
         return this.label;
     }
 

@@ -52,6 +52,9 @@ public class DecisionClass {
     }
 
 
+    private boolean obligation = false;
+    private boolean hasToEat = false;
+
     public int decision(int i, int j) {
 
         Checker clicked = board[i][j];
@@ -66,27 +69,31 @@ public class DecisionClass {
             lastI = 0;
             lastJ = 1;
         } else {
-            notMove(i, j);
+            if (!hasToEat || hasSomethingToEat(i, j)) {
+                notMove(i, j);
+            }
+
         }
         return 1;
     }
 
-    private boolean hasToEat = false;
-
     public void move(int i, int j) {
 
         Checker checker = board[i][j];
+        obligation = false;
         if (eat.containsKey(i * 10 + j)) {
             if (turn == Turn.WHITE) nBlack--;
             else nWhite--;
             board[eat.get(i * 10 + j)[0]][eat.get(i * 10 + j)[1]] = Checker.NOCHECKER;
             eat.remove(i * 10 + j);
+            if (hasSomethingToEat(i, j)) obligation = true;
         }
+        board[lastI][lastJ] = Checker.NOCHECKER;
         clearNotEatenCheckers();
         clearLastPlacesToGo();
         board[i][j] = Checker.moveCheckerToPlace(checker);
 
-        invertPlayer();
+        if (!obligation) invertPlayer();
 
 
         checkWin();
@@ -95,10 +102,48 @@ public class DecisionClass {
     }
 
     public void invertPlayer() {
-        board[lastI][lastJ] = Checker.NOCHECKER;
+
         turn = Turn.invert(turn);
+        checkEat();
+    }
 
+    public boolean checkEat() {
+        hasToEat = false;
 
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (board[i][j] == turn.label) {
+
+                    ;
+                    if (hasSomethingToEat(i, j)) {
+                        hasToEat = true;
+                        return true;
+                    }
+
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean hasSomethingToEat(int i, int j) {
+        Checker checker = board[i][j];
+        int[] ii = new int[]{2, 2, -2, -2};
+        int[] yy = new int[]{-2, 2, -2, 2};
+        int[] ieat = new int[]{1, 1, -1, -1};
+        int[] yeat = new int[]{-1, 1, -1, 1};
+        for (int index = 0; index < 4; index++) {
+            int futI = i + ii[index];
+            int futJ = j + yy[index];
+            if (futI > -1 && futI < 8 && futJ < 8 && futJ > -1) {
+                if (Checker.color(board[i + ieat[index]][j + yeat[index]]) == Checker.invertColor(Checker.color(checker)) && board[futI][futJ] == Checker.NOCHECKER) {
+
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     public void checkWin() {
@@ -130,7 +175,7 @@ public class DecisionClass {
 
         int direction = checker.label;
 
-        if ((i != 7 && checker == Checker.BLACK) || (i != 0 && checker == Checker.WHITE)) {
+        if (!hasToEat && ((i != 7 && checker == Checker.BLACK) || (i != 0 && checker == Checker.WHITE))) {
             // go right
             if (j - 1 != -1) {
 

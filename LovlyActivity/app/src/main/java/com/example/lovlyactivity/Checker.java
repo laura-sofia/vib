@@ -54,6 +54,7 @@ public enum Checker {
 
     public static Checker color(Checker checker) {
         if (checker.label > 0) return BLACK;
+        if (checker.label == 0) return NOCHECKER;
         return WHITE;
     }
 
