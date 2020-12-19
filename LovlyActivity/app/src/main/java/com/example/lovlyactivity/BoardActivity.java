@@ -1,23 +1,24 @@
 package com.example.lovlyactivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class Menu extends AppCompatActivity {
+public class BoardActivity extends AppCompatActivity {
+
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_menu);
+        context = getApplicationContext();
+        setContentView(R.layout.activity_main);
     }
 
-    public void Play(View view) {
-        Intent intent = new Intent(this, BoardActivity.class);
+    public void win() {
+        Intent intent = new Intent(context, Win.class);
         startActivity(intent);
-
-
     }
 }

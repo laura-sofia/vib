@@ -11,9 +11,9 @@ public class DecisionClass {
     int lastI = 0;
     int lastJ = 1;
     public Checker won = Checker.NOCHECKER;
-    private int nBlack = 12;
+    private int nBlack = 2;
     private ArrayList<int[]> lastPlacesToGo;
-    private int nWhite = 12;
+    private int nWhite = 2;
     private Map<Integer, int[]> eat;
     private Checker[][] board;
     ///         place ,,,, oponent
@@ -86,7 +86,9 @@ public class DecisionClass {
             else nWhite--;
             board[eat.get(i * 10 + j)[0]][eat.get(i * 10 + j)[1]] = Checker.NOCHECKER;
             eat.remove(i * 10 + j);
-            if (hasSomethingToEat(i, j)) obligation = true;
+            if (hasSomethingToEat(i, j)) {
+                obligation = true;
+            }
         }
         board[lastI][lastJ] = Checker.NOCHECKER;
         clearNotEatenCheckers();
@@ -94,7 +96,9 @@ public class DecisionClass {
         board[i][j] = Checker.moveCheckerToPlace(checker);
 
         if (!obligation) invertPlayer();
-
+        else {
+            notMove(i, j);
+        }
 
         checkWin();
         //// Winning class

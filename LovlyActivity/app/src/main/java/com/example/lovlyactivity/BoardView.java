@@ -6,24 +6,24 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-public class DoodleView extends View {
+public class BoardView extends View {
 
 
     // private DrawingClass drawing;
     // private DecisionClass decisionClass;
     private BoardState boardState;
 
-    public DoodleView(Context context) {
+    public BoardView(Context context) {
         super(context);
         init(null, 0);
     }
 
-    public DoodleView(Context context, AttributeSet attributeSet) {
+    public BoardView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
         init(attributeSet, 0);
     }
 
-    public DoodleView(Context context, AttributeSet attributeSet, int defStyle) {
+    public BoardView(Context context, AttributeSet attributeSet, int defStyle) {
         super(context, attributeSet, defStyle);
         init(attributeSet, defStyle);
     }
@@ -54,8 +54,6 @@ public class DoodleView extends View {
                 boardState.update(touchX, touchY, getHeight(), getWidth());
                 break;
 
-            case MotionEvent.ACTION_UP:
-                break;
         }
         invalidate();
         return true;

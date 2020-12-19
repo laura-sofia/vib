@@ -2,7 +2,7 @@ package com.example.lovlyactivity;
 
 import android.graphics.Canvas;
 
-public class BoardState {
+public class BoardState extends BoardActivity {
 
     private DecisionClass decisionClass;
     private DrawingClass drawingClass;
@@ -21,10 +21,17 @@ public class BoardState {
     }
 
     public void drawSquare(Canvas canvas, int width, int height) {
-        if (decisionClass.won != Checker.NOCHECKER) {
-            drawingClass.drawWin(canvas, width, height, decisionClass.won);
+        Checker a = decisionClass.won;
+        if (a != Checker.NOCHECKER) {
             win = true;
+            // Intent intent=new Intent(this,Win.class);
+            // startActivity(intent);
+            super.win();
+            // MainActivity.win(decisionClass.won);
+            // drawingClass.drawWin(canvas, width, height, decisionClass.won);
+
         } else {
+
             drawingClass.drawSquare(canvas, width, height, getBoard(), getTurn());
         }
 
