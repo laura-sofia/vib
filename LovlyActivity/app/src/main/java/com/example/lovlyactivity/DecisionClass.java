@@ -4,18 +4,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DecisionClass {
-    /// make bith obazatelhno
-    //// viigrat
+public class DecisionClass implements OnPlacesToGo {
 
     int lastI = 0;
     int lastJ = 1;
     public Checker won = Checker.NOCHECKER;
-    private int nBlack = 2;
+    private int nBlack = 12;
     private ArrayList<int[]> lastPlacesToGo;
-    private int nWhite = 2;
+    private int nWhite = 12;
     private Map<Integer, int[]> eat;
     private Checker[][] board;
+    private DamaPosition damaPosition;
     ///         place ,,,, oponent
     private Turn turn = Turn.WHITE;
 
@@ -59,11 +58,10 @@ public class DecisionClass {
 
         Checker clicked = board[i][j];
 
-        if (clicked == Checker.WHITE_PLACE_TO_GO || clicked == Checker.BLACK_PLACE_TO_GO)
+        if (Checker.isPlaceToGo(clicked))
             move(i, j);
-        else if (clicked == Checker.WHITE_CLICKED || clicked == Checker.BLACK_CLICKED) {
+        else if (Checker.wasClicked(clicked)) {
             board[i][j] = Checker.undoClicked(board[i][j]);
-            ////
             clearLastPlacesToGo();
             clearNotEatenCheckers();
             lastI = 0;
@@ -72,7 +70,6 @@ public class DecisionClass {
             if (!hasToEat || hasSomethingToEat(i, j)) {
                 notMove(i, j);
             }
-
         }
         return 1;
     }
@@ -93,8 +90,7 @@ public class DecisionClass {
         board[lastI][lastJ] = Checker.NOCHECKER;
         clearNotEatenCheckers();
         clearLastPlacesToGo();
-        board[i][j] = Checker.moveCheckerToPlace(checker);
-
+        moveCheckerToPlace(i, j, checker);
         if (!obligation) invertPlayer();
         else {
             notMove(i, j);
@@ -103,6 +99,20 @@ public class DecisionClass {
         checkWin();
         //// Winning class
         ////
+    }
+
+    public void moveCheckerToPlace(int i, int j, Checker checker) {
+        if (Checker.isDamaPlaceToGo(checker)) {
+            board[i][j] = Checker.makeDama(checker);
+        } else board[i][j] = Checker.moveCheckerToPlace(checker);
+    }
+
+    public boolean isDamaPlace(int i, int j, Checker checker) {
+        if ((Checker.color(checker) == Checker.BLACK && i == 7) || (Checker.color(checker) == Checker.WHITE && i == 0)) {
+            return true;
+        }
+        return false;
+
     }
 
     public void invertPlayer() {
@@ -161,7 +171,7 @@ public class DecisionClass {
         if (Checker.color(clicked) == Checker.WHITE && Turn.BLACK == turn) return 1;
         if (Checker.color(clicked) == Checker.BLACK && Turn.WHITE == turn) return 1;
 
-        if (board[lastI][lastJ] == Checker.WHITE_CLICKED || board[lastI][lastJ] == Checker.BLACK_CLICKED) {
+        if (Checker.wasClicked(board[lastI][lastJ])) {
             board[lastI][lastJ] = Checker.undoClicked(board[lastI][lastJ]);
         }
         lastI = i;
@@ -170,21 +180,30 @@ public class DecisionClass {
         clearLastPlacesToGo();
         clearNotEatenCheckers();
         board[i][j] = Checker.makeClicked(board[i][j]);
+        whereToGo(i, j, clicked);
         position(i, j, clicked);
 
         return 1;
     }
 
+    public void whereToGo(int i, int j, Checker checker) {
+        if (Checker.isDama(checker)) board = damaPosition.position(i, j, board);
+        else position(i, j, checker);
+    }
+
     public void position(int i, int j, Checker checker) {
 
-        int direction = checker.label;
+        int direction = Checker.color(checker).label;
 
-        if (!hasToEat && ((i != 7 && checker == Checker.BLACK) || (i != 0 && checker == Checker.WHITE))) {
+        if (!hasToEat && ((i != 7 && Checker.color(checker) == Checker.BLACK) || (i != 0 && Checker.color(checker) == Checker.WHITE))) {
             // go right
             if (j - 1 != -1) {
 
                 if (board[i + direction][j - 1] == Checker.NOCHECKER) {
-                    board[i + direction][j - 1] = Checker.makePlaceToGo(checker);
+                    if (isDamaPlace(i + direction, j - 1, checker)) {
+                        board[i + direction][j - 1] = Checker.makePlaceToGo(Checker.makeDama(checker));
+                    } else board[i + direction][j - 1] = Checker.makePlaceToGo(checker);
+
                     lastPlacesToGo.add(new int[]{i + direction, j - 1});
                 }
             }
@@ -192,7 +211,11 @@ public class DecisionClass {
             //go left
             if (j + 1 != 8) {
                 if (board[i + direction][j + 1] == Checker.NOCHECKER) {
-                    board[i + direction][j + 1] = Checker.makePlaceToGo(checker);
+                    if (isDamaPlace(i + direction, j + 1, checker)) {
+                        board[i + direction][j + 1] = Checker.makePlaceToGo(Checker.makeDama(checker));
+                    } else board[i + direction][j + 1] = Checker.makePlaceToGo(checker);
+
+
                     lastPlacesToGo.add(new int[]{i + direction, j + 1});
                 }
             }
@@ -205,8 +228,10 @@ public class DecisionClass {
             int futI = i + ii[index];
             int futJ = j + yy[index];
             if (futI > -1 && futI < 8 && futJ < 8 && futJ > -1) {
-                if (board[i + ieat[index]][j + yeat[index]] == Checker.invertColor(checker) && board[futI][futJ] == Checker.NOCHECKER) {
-                    board[futI][futJ] = Checker.makePlaceToGo(checker);
+                if (Checker.color(board[i + ieat[index]][j + yeat[index]]) == Checker.invertColor(checker) && board[futI][futJ] == Checker.NOCHECKER) {
+                    if (isDamaPlace(futI, j + 1, checker)) {
+                        board[futI][futJ] = Checker.makePlaceToGo(Checker.makeDama(checker));
+                    } else board[futI][futJ] = Checker.makePlaceToGo(checker);
                     board[i + ieat[index]][j + yeat[index]] = Checker.willBeEaten(Checker.invertColor(checker));
                     eat.put((futI) * 10 + futJ, new int[]{i + ieat[index], j + yeat[index]});
                     lastPlacesToGo.add(new int[]{futI, futJ});
@@ -233,7 +258,11 @@ public class DecisionClass {
         eat.clear();
     }
 
+
     public void init() {
+
+        damaPosition = new DamaPosition();
+        damaPosition.setOnPlacesToGo(this);
         int dir = 1;
         board = new Checker[8][8];
         for (int i = 0; i < 3; i++) {
@@ -257,6 +286,12 @@ public class DecisionClass {
         lastPlacesToGo = new ArrayList<>();
         eat = new HashMap<>();
 
+
     }
 
+    public void onPlacesToGo(ArrayList<int[]> lastPlacesToGo) {
+
+        this.lastPlacesToGo = lastPlacesToGo;
+
+    }
 }

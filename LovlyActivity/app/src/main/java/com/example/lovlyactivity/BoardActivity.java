@@ -1,24 +1,26 @@
 package com.example.lovlyactivity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class BoardActivity extends AppCompatActivity {
-
-    private Context context;
+public class BoardActivity extends AppCompatActivity implements OnWonListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        context = getApplicationContext();
         setContentView(R.layout.activity_main);
+        BoardView view = findViewById(R.id.boardView);
+        view.setOnWonListener(this);
     }
 
-    public void win() {
-        Intent intent = new Intent(context, Win.class);
-        startActivity(intent);
+
+    public void onWon(Checker ch) {
+        if (ch != Checker.NOCHECKER) {
+            Intent intent = new Intent(this, Win.class);
+            intent.putExtra("WON", Checker.checkerToString(ch));
+            startActivity(intent);
+        }
     }
 }

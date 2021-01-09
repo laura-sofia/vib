@@ -14,39 +14,17 @@ public class DrawingClass {
     private Paint TextColor = new Paint();
     private Paint eatenColor = new Paint();
     private Paint hasToEat = new Paint();
-    private String black, white;
-
-   // private int[][] board;
-    private boolean turn;
-
-    //  private DecisionClass decisionClass;
-    //   private BoardState boardState;
+    private Paint yellow = new Paint();
 
     public DrawingClass() {
 
-        // board = new int[8][8];
         init();
     }
 
-    public void drawWin(Canvas canvas, int width, int height, Checker whoWon) {
-        String s;
-        if (whoWon == Checker.BLACK) s = black;
-        else s = white;
-        canvas.drawText(s + " won.", 100, width / 2, TextColor);
-
-
-    }
-
     public void drawSquare(Canvas canvas, int width, int height, Checker[][] board, Turn turn) {
-        // this.board=board;
-        //  this.turn=turn;
-        //   board=boardState.getBoard();
-        //  turn =boardState.getTurn();
-        String now;
-        if (turn == Turn.WHITE) now = white;
-        else now = black;
+
         canvas.drawColor(Color.GRAY);
-        canvas.drawText("It's " + now + "'s turn.", 40, 120, TextColor);
+        canvas.drawText("It's " + turn.toString() + "'s turn.", 40, 120, TextColor);
 
         int top = (height - width + 20) / 2;
         int smallSquare = width / 8 - 5;
@@ -63,20 +41,27 @@ public class DrawingClass {
                 if ((i + j) % 2 > 0) {
                     canvas.drawRect(xS, yS, xS + smallSquare, yS + smallSquare, blackSquare);
                 }
-                if (checker == Checker.BLACK_PLACE_TO_GO || checker == Checker.WHITE_PLACE_TO_GO) {
-                    canvas.drawCircle(x, y, smallSquare / 2 - 5, blueCircle);
+                if (Checker.isPlaceToGo(checker)) {
+                    canvas.drawCircle(x, y, (float) smallSquare / 2 - 5, blueCircle);
                 } else if (checker.label > 0) {
-                    canvas.drawCircle(x, y, smallSquare / 2 - 5, blackCircle);
-                    if (checker == Checker.BLACK_CLICKED)
+                    if (Checker.isDama(checker))
+                        canvas.drawCircle(x, y, smallSquare / 2, yellow);
+
+                    canvas.drawCircle(x, y, (float) smallSquare / 2 - 5, blackCircle);
+                    if (Checker.wasClicked(checker))
                         canvas.drawCircle(x, y, smallSquare / 2 - 10, blueCircle);
                     if (checker == Checker.BLACK_WILL_BE_EATEN)
                         canvas.drawCircle(x, y, smallSquare / 2 - 10, eatenColor);
+
                 } else if (checker.label < 0) {
+                    if (Checker.isDama(checker))
+                        canvas.drawCircle(x, y, smallSquare / 2, yellow);
                     canvas.drawCircle(x, y, smallSquare / 2 - 5, whiteCircle);
-                    if (checker == Checker.WHITE_CLICKED)
+                    if (Checker.wasClicked(checker))
                         canvas.drawCircle(x, y, smallSquare / 2 - 10, blueCircle);
                     if (checker == Checker.WHITE_WILL_BE_EATEN)
                         canvas.drawCircle(x, y, smallSquare / 2 - 10, eatenColor);
+
                 }
 
                 x += smallSquare;
@@ -92,9 +77,6 @@ public class DrawingClass {
 
 
     public void init() {
-
-        // decisionClass=new DecisionClass();
-        //   boardState=new BoardState();
 
         blackSquare.setColor(Color.BLACK);
         blackSquare.setStyle(Paint.Style.FILL);
@@ -121,9 +103,7 @@ public class DrawingClass {
         hasToEat.setStyle(Paint.Style.FILL);
         hasToEat.setColor(Color.CYAN);
 
-        black = "black";
-        white = "white";
-
-
+        yellow.setStyle(Paint.Style.FILL);
+        yellow.setColor(Color.YELLOW);
     }
 }

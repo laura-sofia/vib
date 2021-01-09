@@ -15,6 +15,11 @@ public enum Turn {
         return WHITE;
     }
 
+    public static String turnToString(Turn turn) {
+        if (turn == WHITE) return "white";
+        return "black";
+    }
+
     public Checker turn() {
         return this.label;
     }

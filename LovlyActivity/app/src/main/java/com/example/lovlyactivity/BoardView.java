@@ -8,10 +8,16 @@ import android.view.View;
 
 public class BoardView extends View {
 
+    private OnWonListener onWonListener = null;
 
     // private DrawingClass drawing;
     // private DecisionClass decisionClass;
     private BoardState boardState;
+
+
+    public void setOnWonListener(OnWonListener onWonListener) {
+        this.onWonListener = onWonListener;
+    }
 
     public BoardView(Context context) {
         super(context);
@@ -38,8 +44,6 @@ public class BoardView extends View {
         super.onDraw(canvas);
 
         boardState.drawSquare(canvas, getWidth(), getHeight());
-
-
     }
 
     @Override
@@ -56,6 +60,10 @@ public class BoardView extends View {
 
         }
         invalidate();
+        Checker ch = boardState.hasWon();
+        if (ch != Checker.NOCHECKER) {
+            onWonListener.onWon(ch);
+        }
         return true;
 
     }
