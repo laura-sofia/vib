@@ -1,4 +1,6 @@
-package com.example.lovlyactivity;
+package com.example.lovlyactivity.Views;
+
+import com.example.lovlyactivity.enums.Checker;
 
 public class WinningClass {
 

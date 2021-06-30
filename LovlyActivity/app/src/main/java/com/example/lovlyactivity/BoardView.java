@@ -6,6 +6,9 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.example.lovlyactivity.enums.Checker;
+import com.example.lovlyactivity.interfaces.OnWonListener;
+
 public class BoardView extends View {
 
     private OnWonListener onWonListener = null;

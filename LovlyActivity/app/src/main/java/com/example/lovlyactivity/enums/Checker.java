@@ -1,4 +1,4 @@
-package com.example.lovlyactivity;
+package com.example.lovlyactivity.enums;
 
 public enum Checker {
     NOCHECKER(0),

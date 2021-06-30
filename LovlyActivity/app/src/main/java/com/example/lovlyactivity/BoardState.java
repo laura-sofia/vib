@@ -2,6 +2,9 @@ package com.example.lovlyactivity;
 
 import android.graphics.Canvas;
 
+import com.example.lovlyactivity.enums.Checker;
+import com.example.lovlyactivity.enums.Turn;
+
 public class BoardState {
 
     private DecisionClass decisionClass;

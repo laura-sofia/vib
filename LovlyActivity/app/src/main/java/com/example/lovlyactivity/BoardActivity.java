@@ -5,6 +5,9 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.lovlyactivity.enums.Checker;
+import com.example.lovlyactivity.interfaces.OnWonListener;
+
 public class BoardActivity extends AppCompatActivity implements OnWonListener {
 
     @Override

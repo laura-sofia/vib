@@ -1,13 +1,28 @@
 package com.example.lovlyactivity;
 
+import com.example.lovlyactivity.enums.Checker;
+import com.example.lovlyactivity.interfaces.OnCheckersToEat;
+import com.example.lovlyactivity.interfaces.OnPlacesToGo;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DamaPosition {
 
     private OnPlacesToGo onPlacesToGo = null;
+    private OnCheckersToEat onCheckersToEat = null;
+    private Map<Coordinate, Coordinate> eat;
+    private ArrayList<Coordinate> lastPlacesToGo;
 
     public DamaPosition() {
+        eat = new HashMap<>();
+        lastPlacesToGo = new ArrayList<>();
 
+    }
+
+    public void setOnCheckersToEat(OnCheckersToEat onCheckersToEat) {
+        this.onCheckersToEat = onCheckersToEat;
     }
 
     public void setOnPlacesToGo(OnPlacesToGo onClearPlacesToGo) {
@@ -20,7 +35,7 @@ public class DamaPosition {
 
         int[] igo = new int[]{-1, -1, 1, 1};
         int[] jgo = new int[]{-1, 1, -1, 1};
-        ArrayList<int[]> arr = new ArrayList<>();
+
 
         for (int direction = 0; direction < 4; direction++) {
             int squares = 1;
@@ -30,13 +45,39 @@ public class DamaPosition {
                 if (indexi > 7 || indexi < 0 || indexj > 7 || indexj < 0) break;
                 if (board[indexi][indexj] == Checker.NOCHECKER) {
                     board[indexi][indexj] = Checker.makePlaceToGo(checker);
-                    arr.add(new int[]{indexi, indexj});
+                    lastPlacesToGo.add(new Coordinate(indexi, indexj));
                     squares++;
-                } else break;
+                } else if (board[indexi][indexj] == Checker.invertColor(checker)) {
+                    if (board[indexi + igo[direction]][indexj + jgo[direction]] == Checker.NOCHECKER) {
+                        board[indexi][indexj] = Checker.willBeEaten(Checker.invertColor(checker));
+                        Coordinate checkerWillBeEaten = new Coordinate(indexi, indexj);
+                        squares++;
+                        indexi = i + igo[direction] * squares;
+                        indexj = j + jgo[direction] * squares;
+
+                        while (board[indexi][indexj] == Checker.NOCHECKER) {
+                            if (indexi > 7 || indexi < 0 || indexj > 7 || indexj < 0) break;
+                            board[indexi][indexj] = Checker.makePlaceToGo(checker);
+                            Coordinate coordinate = new Coordinate(indexi, indexj);
+                            lastPlacesToGo.add(coordinate);
+                            eat.put(coordinate, checkerWillBeEaten);
+                        }
+                    }
+                    break;
+                } else {
+                    break;
+                }
             }
         }
-        onPlacesToGo.onPlacesToGo(arr);
+        onPlacesToGo.onPlacesToGo(lastPlacesToGo);
+        onCheckersToEat.OnCheckersToEat(eat);
         return board;
     }
 
+    public boolean hasSomethingToEat(int i, int j) {
+
+
+        ///////////////////////////////////
+        return false;
+    }
 }

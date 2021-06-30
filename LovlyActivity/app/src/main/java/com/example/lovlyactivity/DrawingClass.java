@@ -4,9 +4,12 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
+import com.example.lovlyactivity.enums.Checker;
+import com.example.lovlyactivity.enums.Turn;
+
 public class DrawingClass {
 
-    private Paint square=new Paint();
+    private Paint square = new Paint();
     private Paint blackSquare = new Paint();
     private Paint whiteCircle = new Paint();
     private Paint blackCircle = new Paint();
