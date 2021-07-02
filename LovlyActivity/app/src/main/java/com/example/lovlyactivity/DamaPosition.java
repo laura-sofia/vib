@@ -14,6 +14,9 @@ public class DamaPosition {
     private OnCheckersToEat onCheckersToEat = null;
     private Map<Coordinate, Coordinate> eat;
     private ArrayList<Coordinate> lastPlacesToGo;
+    private int[] igo = new int[]{-1, -1, 1, 1};
+    private int[] jgo = new int[]{-1, 1, -1, 1};
+
 
     public DamaPosition() {
         eat = new HashMap<>();
@@ -32,11 +35,6 @@ public class DamaPosition {
     public Checker[][] position(int i, int j, Checker[][] board) {
 
         Checker checker = Checker.undoClicked(board[i][j]);
-
-        int[] igo = new int[]{-1, -1, 1, 1};
-        int[] jgo = new int[]{-1, 1, -1, 1};
-
-
         for (int direction = 0; direction < 4; direction++) {
             int squares = 1;
             while (true) {
@@ -74,9 +72,45 @@ public class DamaPosition {
         return board;
     }
 
-    public boolean hasSomethingToEat(int i, int j) {
+    public boolean hasSomethingToEat(int i, int j, Checker[][] board) {
+        Checker checker = board[i][j];
+        for (int direction = 0; direction < 4; direction++) {
+            int squares = 1;
+            while (true) {
+                int indexi = i + igo[direction] * squares;
+                int indexj = j + jgo[direction] * squares;
+                if (indexi > 7 || indexi < 0 || indexj > 7 || indexj < 0) break;
+                while (board[indexi][indexj] == Checker.NOCHECKER) {
+                    indexi += igo[direction];
+                    indexj += jgo[direction];
+                    if (indexi > 7 || indexi < 0 || indexj > 7 || indexj < 0) {
+                        break;
+                    }
+                    ;
+                    squares++;
+                }
+                if (board[indexi][indexj] == Checker.invertColor(checker)) {
+                    if (board[indexi + igo[direction]][indexj + jgo[direction]] == Checker.NOCHECKER) {
+                        board[indexi][indexj] = Checker.willBeEaten(Checker.invertColor(checker));
+                        Coordinate checkerWillBeEaten = new Coordinate(indexi, indexj);
+                        squares++;
+                        indexi = i + igo[direction] * squares;
+                        indexj = j + jgo[direction] * squares;
 
-
+                        while (board[indexi][indexj] == Checker.NOCHECKER) {
+                            if (indexi > 7 || indexi < 0 || indexj > 7 || indexj < 0) break;
+                            board[indexi][indexj] = Checker.makePlaceToGo(checker);
+                            Coordinate coordinate = new Coordinate(indexi, indexj);
+                            lastPlacesToGo.add(coordinate);
+                            eat.put(coordinate, checkerWillBeEaten);
+                        }
+                    }
+                    break;
+                } else {
+                    break;
+                }
+            }
+        }
         ///////////////////////////////////
         return false;
     }
