@@ -1,6 +1,6 @@
 package com.example.lovlyactivity.Views;
 
-import com.example.lovlyactivity.Coordinate;
+import com.example.lovlyactivity.structure.Coordinate;
 
 public class example {
 

@@ -97,6 +97,7 @@ public enum Checker {
     }
 
     public static Checker undoWillBeEaten(Checker checker) {
+        if (checker == NOCHECKER) return NOCHECKER;
         if (checker == BLACK_WILL_BE_EATEN) return BLACK;
         if (checker == BLACK_DAMA_WILL_BE_EATEN) return BLACK_DAMA;
         if (checker == WHITE_DAMA_WILL_BE_EATEN) return WHITE_DAMA;

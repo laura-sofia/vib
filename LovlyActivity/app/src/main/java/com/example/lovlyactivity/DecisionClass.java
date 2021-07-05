@@ -4,6 +4,7 @@ import com.example.lovlyactivity.enums.Checker;
 import com.example.lovlyactivity.enums.Turn;
 import com.example.lovlyactivity.interfaces.OnCheckersToEat;
 import com.example.lovlyactivity.interfaces.OnPlacesToGo;
+import com.example.lovlyactivity.structure.Coordinate;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -76,6 +77,8 @@ public class DecisionClass implements OnPlacesToGo, OnCheckersToEat {
             clearNotEatenCheckers();
             lastI = 0;
             lastJ = 1;
+        } else if (Checker.color(clicked) != turn.label) {
+            return 1;
         } else {
             if (!hasToEat || hasSomethingToEat(i, j)) {
                 notMove(i, j);
@@ -101,11 +104,12 @@ public class DecisionClass implements OnPlacesToGo, OnCheckersToEat {
         Checker checker = board[i][j];
         obligation = false;
         Coordinate c = new Coordinate(i, j);
-        if (eat.containsKey(c)) {
+        Coordinate toEat = contains(c);
+        if (toEat != null) {
             if (turn == Turn.WHITE) nBlack--;
             else nWhite--;
 
-            board[eat.get(c).i][eat.get(c).j] = Checker.NOCHECKER;
+            board[toEat.i][toEat.j] = Checker.NOCHECKER;
             if (hasSomethingToEat(i, j)) {
                 obligation = true;
             }
@@ -129,7 +133,7 @@ public class DecisionClass implements OnPlacesToGo, OnCheckersToEat {
 
         for (int i = 0; i < 8; i++)
             for (int j = 0; j < 8; j++) {
-                if (board[i][j] == turn.label) {
+                if (Checker.color(board[i][j]) == turn.label) {
                     if (hasSomethingToEat(i, j)) {
                         hasToEat = true;
                         return true;
@@ -142,8 +146,15 @@ public class DecisionClass implements OnPlacesToGo, OnCheckersToEat {
 
     public boolean hasSomethingToEat(int i, int j) {
         Checker checker = board[i][j];
-        if (Checker.isDama(checker)) return damaPosition.hasSomethingToEat(i, j);
-        return normalPosition.hasSomethingToEat(i, j);
+        if (Checker.isDama(checker)) return damaPosition.hasSomethingToEat(i, j, board);
+        return normalPosition.hasSomethingToEat(i, j, board);
+    }
+
+    public Coordinate contains(Coordinate c) {
+        for (Map.Entry<Coordinate, Coordinate> entry : eat.entrySet()) {
+            if (c.equals(entry.getKey())) return entry.getValue();
+        }
+        return null;
     }
 
     public void checkWin() {
@@ -172,7 +183,7 @@ public class DecisionClass implements OnPlacesToGo, OnCheckersToEat {
     }
 
     public void whereToGo(int i, int j, Checker checker) {
-        if (Checker.isDama(checker)) board = damaPosition.position(i, j, board);
+        if (Checker.isDama(checker)) board = damaPosition.position(i, j, board, hasToEat);
         else board = normalPosition.position(i, j, checker, board, hasToEat);
     }
 

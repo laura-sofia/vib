@@ -1,6 +1,6 @@
 package com.example.lovlyactivity.interfaces;
 
-import com.example.lovlyactivity.Coordinate;
+import com.example.lovlyactivity.structure.Coordinate;
 
 import java.util.Map;
 

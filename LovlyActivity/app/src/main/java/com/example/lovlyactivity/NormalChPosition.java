@@ -3,6 +3,7 @@ package com.example.lovlyactivity;
 import com.example.lovlyactivity.enums.Checker;
 import com.example.lovlyactivity.interfaces.OnCheckersToEat;
 import com.example.lovlyactivity.interfaces.OnPlacesToGo;
+import com.example.lovlyactivity.structure.Coordinate;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -83,8 +84,8 @@ public class NormalChPosition {
         return board;
     }
 
-    public boolean hasSomethingToEat(int i, int j) {
-        Checker checker = board[i][j];
+    public boolean hasSomethingToEat(int i, int j, Checker[][] board) {
+        Checker checker = this.board[i][j];
         int[] ii = new int[]{2, 2, -2, -2};
         int[] yy = new int[]{-2, 2, -2, 2};
         int[] ieat = new int[]{1, 1, -1, -1};
@@ -93,7 +94,7 @@ public class NormalChPosition {
             int futI = i + ii[index];
             int futJ = j + yy[index];
             if (futI > -1 && futI < 8 && futJ < 8 && futJ > -1) {
-                if (Checker.color(board[i + ieat[index]][j + yeat[index]]) == Checker.invertColor(Checker.color(checker)) && board[futI][futJ] == Checker.NOCHECKER) {
+                if (Checker.color(this.board[i + ieat[index]][j + yeat[index]]) == Checker.invertColor(Checker.color(checker)) && this.board[futI][futJ] == Checker.NOCHECKER) {
 
                     return true;
                 }
