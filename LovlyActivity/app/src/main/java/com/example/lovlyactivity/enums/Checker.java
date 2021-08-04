@@ -26,20 +26,17 @@ public enum Checker {
     }
 
     public static boolean isDamaPlaceToGo(Checker checker) {
-        if (checker == BLACK_DAMA_PLACE_TO_GO || checker == WHITE_DAMA_PLACE_TO_GO) return true;
-        return false;
+        return checker == BLACK_DAMA_PLACE_TO_GO || checker == WHITE_DAMA_PLACE_TO_GO;
     }
 
     public static boolean isPlaceToGo(Checker checker) {
         int u = Math.abs(checker.label);
-        if (u == 3 || u == 7) return true;
-        return false;
+        return u == 3 || u == 7;
     }
 
     public static boolean wasClicked(Checker checker) {
         int a = Math.abs(checker.label);
-        if (a == 2 || a == 6) return true;
-        return false;
+        return a == 2 || a == 6;
     }
 
     public static Checker makeDama(Checker checker) {
@@ -49,8 +46,7 @@ public enum Checker {
 
     public static boolean isDama(Checker checker) {
         int u = Math.abs(checker.label);
-        if (u == 5 || u == 6) return true;
-        return false;
+        return u == 5 || u == 6 || u == 8;
     }
 
     public static Checker invertColor(Checker checker) {
@@ -110,4 +106,11 @@ public enum Checker {
         return WHITE;
     }
 
+    public static boolean isBlack(Checker checker) {
+        return (checker.label > 0);
+    }
+
+    public static boolean willBeEatenQ(Checker checker) {
+        return (Math.abs(checker.label) == 4 || Math.abs(checker.label) == 8);
+    }
 }

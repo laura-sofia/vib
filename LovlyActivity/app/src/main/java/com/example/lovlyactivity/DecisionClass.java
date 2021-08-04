@@ -60,19 +60,53 @@ public class DecisionClass implements OnPlacesToGo, OnCheckersToEat {
 
     private boolean obligation = false;
     private boolean hasToEat = false;
+    private ArrayList<Coordinate> listOfCheckersWillEat;
 
-    public static void canMove() {
-        ////////////////
+    public boolean canMove() {
+        ///make list or array[][] of checkers that will eat
+        /// check if can move
+        listOfCheckersWillEat = new ArrayList<>();
+        boolean canMove = false;
+
+        for (int i = 0; i < 8; i++)
+            for (int j = 0; j < 8; j++) {
+                if (Checker.color(board[i][j]) == turn.label) {
+                    boolean[] temp = hasSomethingToEat(i, j, false);
+                    if (temp[0]) {
+                        hasToEat = true;
+                        listOfCheckersWillEat.add(new Coordinate(i, j));
+                    }
+                    if (temp[1]) canMove = true;
+                }
+            }
+        ///////////////////////////////////////////////////////////////////////make list of checker that have to eat
+        return canMove;
+
     }
 
+    public boolean checkEat() {
+        hasToEat = false;
+
+        for (int i = 0; i < 8; i++)
+            for (int j = 0; j < 8; j++) {
+                if (Checker.color(board[i][j]) == turn.label) {
+                    if (hasSomethingToEat(i, j, true)[0]) {
+                        hasToEat = true;
+                        return true;
+                    }
+                }
+            }
+        ///////////////////////////////////////////////////////////////////////make list of checker that have to eat
+        return false;
+    }
     public int decision(int i, int j) {
 
         Checker clicked = board[i][j];
-
+        /// & !obligation
         if (Checker.isPlaceToGo(clicked))
             move(i, j);
         else if (Checker.wasClicked(clicked)) {
-            board[i][j] = Checker.undoClicked(board[i][j]);
+            board[i][j] = Checker.undoClicked(clicked);
             clearLastPlacesToGo();
             clearNotEatenCheckers();
             lastI = 0;
@@ -80,7 +114,7 @@ public class DecisionClass implements OnPlacesToGo, OnCheckersToEat {
         } else if (Checker.color(clicked) != turn.label) {
             return 1;
         } else {
-            if (!hasToEat || hasSomethingToEat(i, j)) {
+            if (!hasToEat || hasSomethingToEat(i, j, true)[0]) {
                 notMove(i, j);
             }
         }
@@ -92,11 +126,11 @@ public class DecisionClass implements OnPlacesToGo, OnCheckersToEat {
             board[i][j] = Checker.makeDama(checker);
         } else board[i][j] = Checker.moveCheckerToPlace(checker);
     }
-
     public void invertPlayer() {
 
         turn = Turn.invert(turn);
-        checkEat();
+        // checjhkhkEat();
+        //canhfhgfMove();
     }
 
     public void move(int i, int j) {
@@ -110,7 +144,7 @@ public class DecisionClass implements OnPlacesToGo, OnCheckersToEat {
             else nWhite--;
 
             board[toEat.i][toEat.j] = Checker.NOCHECKER;
-            if (hasSomethingToEat(i, j)) {
+            if (hasSomethingToEat(i, j, true)[0]) {
                 obligation = true;
             }
         }
@@ -128,26 +162,11 @@ public class DecisionClass implements OnPlacesToGo, OnCheckersToEat {
         ////
     }
 
-    public boolean checkEat() {
-        hasToEat = false;
 
-        for (int i = 0; i < 8; i++)
-            for (int j = 0; j < 8; j++) {
-                if (Checker.color(board[i][j]) == turn.label) {
-                    if (hasSomethingToEat(i, j)) {
-                        hasToEat = true;
-                        return true;
-                    }
-                }
-            }
-        ///////////////////////////////////////////////////////////////////////make list of checker that have to eat
-        return false;
-    }
-
-    public boolean hasSomethingToEat(int i, int j) {
+    public boolean[] hasSomethingToEat(int i, int j, boolean onlyEat) {
         Checker checker = board[i][j];
-        if (Checker.isDama(checker)) return damaPosition.hasSomethingToEat(i, j, board);
-        return normalPosition.hasSomethingToEat(i, j, board);
+        if (Checker.isDama(checker)) return damaPosition.hasSomethingToEat(i, j, board, onlyEat);
+        return normalPosition.hasSomethingToEat(i, j, board, onlyEat);
     }
 
     public Coordinate contains(Coordinate c) {
@@ -156,18 +175,19 @@ public class DecisionClass implements OnPlacesToGo, OnCheckersToEat {
         }
         return null;
     }
-
     public void checkWin() {
-        if (nWhite == 0) won = Checker.BLACK;
-        if (nBlack == 0) won = Checker.WHITE;
-        canMove();
+        if (nWhite == 0) won = Checker.WHITE;
+        if (nBlack == 0) won = Checker.BLACK;
+        if (!canMove()) {
+            won = Turn.invert(turn).label;
+        }
     }
 
-    public int notMove(int i, int j) {
+    public void notMove(int i, int j) {
 
         Checker clicked = board[i][j];
-        if (Checker.color(clicked) == Checker.WHITE && Turn.BLACK == turn) return 1;
-        if (Checker.color(clicked) == Checker.BLACK && Turn.WHITE == turn) return 1;
+        if (Checker.color(clicked) == Checker.WHITE && Turn.BLACK == turn) return;
+        if (Checker.color(clicked) == Checker.BLACK && Turn.WHITE == turn) return;
 
         if (Checker.wasClicked(board[lastI][lastJ])) {
             board[lastI][lastJ] = Checker.undoClicked(board[lastI][lastJ]);
@@ -179,7 +199,6 @@ public class DecisionClass implements OnPlacesToGo, OnCheckersToEat {
         clearNotEatenCheckers();
         board[i][j] = Checker.makeClicked(board[i][j]);
         whereToGo(i, j, clicked);
-        return 1;
     }
 
     public void whereToGo(int i, int j, Checker checker) {
@@ -201,7 +220,6 @@ public class DecisionClass implements OnPlacesToGo, OnCheckersToEat {
         }
         eat.clear();
     }
-
 
     public void init() {
 

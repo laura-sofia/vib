@@ -38,38 +38,36 @@ public class DrawingClass {
         int yS=top;
         canvas.drawRect(20,top,20+8*smallSquare,top+8*smallSquare,square);
 
-        for (int i=0;i<8;i++){
-            for (int j=0;j<8;j++) {
-                Checker checker = board[i][j];
-                if ((i + j) % 2 > 0) {
-                    canvas.drawRect(xS, yS, xS + smallSquare, yS + smallSquare, blackSquare);
-                }
-                if (Checker.isPlaceToGo(checker)) {
-                    canvas.drawCircle(x, y, (float) smallSquare / 2 - 5, blueCircle);
-                } else if (checker.label > 0) {
-                    if (Checker.isDama(checker))
-                        canvas.drawCircle(x, y, smallSquare / 2, yellow);
+       for (int i = 0; i < 8; i++) {
+           for (int j = 0; j < 8; j++) {
+               Checker checker = board[i][j];
+               if ((i + j) % 2 > 0) {
+                   canvas.drawRect(xS, yS, xS + smallSquare, yS + smallSquare, blackSquare);
+               }
 
-                    canvas.drawCircle(x, y, (float) smallSquare / 2 - 5, blackCircle);
-                    if (Checker.wasClicked(checker))
-                        canvas.drawCircle(x, y, smallSquare / 2 - 10, blueCircle);
-                    if (checker == Checker.BLACK_WILL_BE_EATEN)
-                        canvas.drawCircle(x, y, smallSquare / 2 - 10, eatenColor);
+               if (Checker.isPlaceToGo(checker)) {
+                   canvas.drawCircle(x, y, (float) smallSquare / 2 - 5, blueCircle);
+                   x += smallSquare;
+                   xS += smallSquare;
+                   continue;
+               }
+               if (Checker.isDama(checker))
+                   canvas.drawCircle(x, y, smallSquare / 2, yellow);
+               if (checker == Checker.NOCHECKER) ;
+               else if (Checker.isBlack(checker)) {
+                   canvas.drawCircle(x, y, (float) smallSquare / 2 - 5, blackCircle);
+               } else
+                   canvas.drawCircle(x, y, smallSquare / 2 - 5, whiteCircle);
 
-                } else if (checker.label < 0) {
-                    if (Checker.isDama(checker))
-                        canvas.drawCircle(x, y, smallSquare / 2, yellow);
-                    canvas.drawCircle(x, y, smallSquare / 2 - 5, whiteCircle);
-                    if (Checker.wasClicked(checker))
-                        canvas.drawCircle(x, y, smallSquare / 2 - 10, blueCircle);
-                    if (checker == Checker.WHITE_WILL_BE_EATEN)
-                        canvas.drawCircle(x, y, smallSquare / 2 - 10, eatenColor);
+               if (Checker.wasClicked(checker))
+                   canvas.drawCircle(x, y, smallSquare / 2 - 10, blueCircle);
+               if (Checker.willBeEatenQ(checker))
+                   canvas.drawCircle(x, y, smallSquare / 2 - 10, eatenColor);
 
-                }
 
-                x += smallSquare;
-                xS += smallSquare;
-            }
+               x += smallSquare;
+               xS += smallSquare;
+           }
             y+=smallSquare;
             yS+=smallSquare;
             x=20+smallSquare/2;
